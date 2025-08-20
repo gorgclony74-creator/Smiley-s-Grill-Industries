@@ -1,0 +1,2015 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام مراقبة الجودة - Smiley's Grill Industries</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4a7c59;
+            --secondary-color: #8fb996;
+            --accent-color: #f8c630;
+            --light-color: #f5f5f5;
+            --dark-color: #333;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        .navbar {
+            background-color: var(--primary-color);
+        }
+        
+        .sidebar {
+            background-color: var(--secondary-color);
+            min-height: calc(100vh - 56px);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar .nav-link {
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .sidebar .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .card {
+            border: none;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #3a6347;
+            border-color: #3a6347;
+        }
+        
+        .logo-container {
+            text-align: center;
+            padding: 20px 0;
+            background-color: white;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-card i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .specification-table th {
+            background-color: var(--light-color);
+        }
+        
+        .deviation {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .compliance {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .worker-table {
+            font-size: 0.9rem;
+        }
+        
+        .progress {
+            height: 25px;
+        }
+        
+        .quality-badge {
+            font-size: 0.85rem;
+            padding: 0.35em 0.65em;
+        }
+        
+        .employee-row:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+        
+        .alert-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+            max-width: 400px;
+        }
+        
+        .worker-performance {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .top-performer {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border: 1px solid #28a745;
+        }
+        
+        .productivity-bar {
+            height: 20px;
+            border-radius: 10px;
+            background: #e9ecef;
+            overflow: hidden;
+        }
+        
+        .productivity-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8fb996 0%, #4a7c59 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Alert Container -->
+    <div class="alert-container"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <div style="width: 40px; height: 40px; background-color: white; border-radius: 5px; display: inline-flex; align-items: center; justify-content: center; margin-right: 10px;">
+                    <span style="color: var(--primary-color); font-weight: bold;">SGI</span>
+                </div>
+                نظام مراقبة الجودة والإنتاج
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="newEntryBtn"><i class="fas fa-plus-circle me-1"></i>إدخال جديد</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="reportsBtn"><i class="fas fa-chart-bar me-1"></i>التقارير</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="printBtn"><i class="fas fa-print me-1"></i>طباعة</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div class="logo-container">
+                    <div style="width: 80px; height: 80px; background-color: var(--primary-color); border-radius: 10px; display: inline-flex; align-items: center; justify-content: center;">
+                        <span style="color: white; font-weight: bold; font-size: 1.5rem;">SGI</span>
+                    </div>
+                    <h5 class="mt-2">Smiley's Grill Industries</h5>
+                </div>
+                
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#dashboard" data-section="dashboard">
+                                <i class="fas fa-tachometer-alt me-2"></i>
+                                لوحة التحكم
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#dataEntry" data-section="dataEntry">
+                                <i class="fas fa-edit me-2"></i>
+                                إدخال البيانات
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#records" data-section="records">
+                                <i class="fas fa-database me-2"></i>
+                                السجلات
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#analytics" data-section="analytics">
+                                <i class="fas fa-chart-line me-2"></i>
+                                التحليلات
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#workers" data-section="workers">
+                                <i class="fas fa-users me-2"></i>
+                                إدارة العمال
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#specifications" data-section="specifications">
+                                <i class="fas fa-clipboard-list me-2"></i>
+                                المواصفات
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+                <!-- Dashboard Section -->
+                <div class="section active" id="dashboard">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">لوحة مراقبة الجودة والإنتاج</h1>
+                        <div class="btn-toolbar mb-2 mb-md-0">
+                            <div class="btn-group me-2">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" id="todayBtn">اليوم</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" id="weekBtn">الأسبوع</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" id="monthBtn">الشهر</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stats Row -->
+                    <div class="row mb-4">
+                        <div class="col-xl-3 col-lg-6 col-md-6 mb-4">
+                            <div class="stat-card">
+                                <i class="fas fa-bread-slice"></i>
+                                <h4 id="totalLoaves">0</h4>
+                                <p class="text-muted">عدد الأرغفة المنتجة</p>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-6 col-md-6 mb-4">
+                            <div class="stat-card">
+                                <i class="fas fa-check-circle"></i>
+                                <h4 id="complianceRate">0%</h4>
+                                <p class="text-muted">معدل المطابقة</p>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-6 col-md-6 mb-4">
+                            <div class="stat-card">
+                                <i class="fas fa-tachometer-alt"></i>
+                                <h4 id="productionRate">0/ساعة</h4>
+                                <p class="text-muted">معدل الإنتاج</p>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-6 col-md-6 mb-4">
+                            <div class="stat-card">
+                                <i class="fas fa-thermometer-half"></i>
+                                <h4 id="avgTemp">0°م</h4>
+                                <p class="text-muted">متوسط درجة الحرارة</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top Performers -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">أفضل العمال أداءً</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row" id="topPerformers">
+                                        <!-- Will be populated by JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quality Compliance Progress -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">نسبة المطابقة للمواصفات</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label>مطابقة طول الرغيف (55±2 سم):</label>
+                                        <div class="progress mb-2">
+                                            <div id="lengthCompliance" class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>مطابقة الوزن (≥230 جم):</label>
+                                        <div class="progress mb-2">
+                                            <div id="weightCompliance" class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>مطابقة درجة الحرارة (-18 إلى -12°م):</label>
+                                        <div class="progress mb-2">
+                                            <div id="tempCompliance" class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>مطابقة أبعاد القطع:</label>
+                                        <div class="progress mb-2">
+                                            <div id="pieceCompliance" class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Records -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">أحدث عمليات الإدخال</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover" id="recentRecordsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>التاريخ</th>
+                                            <th>الوقت</th>
+                                            <th>طول الرغيف</th>
+                                            <th>الوزن</th>
+                                            <th>درجة الحرارة</th>
+                                            <th>نسبة المطابقة</th>
+                                            <th>الإجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Data will be populated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Entry Section -->
+                <div class="section" id="dataEntry">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">إدخال بيانات الإنتاج</h1>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">بيانات الرغيف</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="productionForm">
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="loafLength" class="form-label">طول الرغيف (سم)</label>
+                                        <input type="number" step="0.1" class="form-control" id="loafLength" required>
+                                        <div class="form-text">المعيار: 55 ± 2 سم (53-57 سم)</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="loafWeight" class="form-label">وزن الرغيف (جرام)</label>
+                                        <input type="number" step="1" class="form-control" id="loafWeight" required>
+                                        <div class="form-text">الحد الأدنى: 230 جرام</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="freezerTemp" class="form-label">درجة حرارة التجميد (°م)</label>
+                                        <input type="number" step="0.1" class="form-control" id="freezerTemp" required>
+                                        <div class="form-text">المدى: -18 إلى -12°م</div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="pieceLength" class="form-label">طول القطعة (سم)</label>
+                                        <input type="number" step="0.1" class="form-control" id="pieceLength" required>
+                                        <div class="form-text">المعيار: 9-11 سم</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="pieceWidth" class="form-label">عرض القطعة (سم)</label>
+                                        <input type="number" step="0.1" class="form-control" id="pieceWidth" required>
+                                        <div class="form-text">المعيار: 5.5-6.5 سم</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="pieceWeight" class="form-label">وزن القطعة (جرام)</label>
+                                        <input type="number" step="0.1" class="form-control" id="pieceWeight" required>
+                                        <div class="form-text">المعيار: 25-30 جرام</div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="piecesPerLoaf" class="form-label">عدد القطع لكل رغيف</label>
+                                        <input type="number" step="1" class="form-control" id="piecesPerLoaf" required>
+                                        <div class="form-text">المعيار: 12-13 قطعة</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="trayFillTime" class="form-label">زمن تعبئة الصينية (دقيقة)</label>
+                                        <input type="number" step="0.1" class="form-control" id="trayFillTime" required>
+                                        <div class="form-text">المعيار: 1 دقيقة</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="freezingTime" class="form-label">زمن التجميد (دقيقة)</label>
+                                        <input type="number" step="1" class="form-control" id="freezingTime" required>
+                                        <div class="form-text">المعيار: 15 دقيقة</div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="piecesPerRow" class="form-label">عدد القطع في الصف الواحد</label>
+                                        <input type="number" step="1" class="form-control" id="piecesPerRow" required>
+                                        <div class="form-text">المعيار: 6-7 قطع</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="rowsPerTray" class="form-label">عدد الصفوف في الصينية</label>
+                                        <input type="number" step="1" class="form-control" id="rowsPerTray" required>
+                                        <div class="form-text">المعيار: 5 صفوف</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="butterPerPiece" class="form-label">كمية الزبدة للقطعة (جرام)</label>
+                                        <input type="number" step="0.1" class="form-control" id="butterPerPiece" required>
+                                        <div class="form-text">المعيار: 5-6 جرام</div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="workHours" class="form-label">عدد ساعات العمل</label>
+                                        <input type="number" step="0.5" class="form-control" id="workHours" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="totalQuantity" class="form-label">الكمية الكلية المنتجة</label>
+                                        <input type="number" step="1" class="form-control" id="totalQuantity" required>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label for="wasteWeight" class="form-label">وزن الهالك (جرام)</label>
+                                        <input type="number" step="1" class="form-control" id="wasteWeight" required>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label class="form-label">إضافة العمال</label>
+                                        <button type="button" class="btn btn-sm btn-outline-primary mb-2" id="addWorkerBtn">
+                                            <i class="fas fa-plus"></i> إضافة عامل
+                                        </button>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered worker-table" id="workersTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>اسم العامل</th>
+                                                        <th>عدد الأرغفة المنتجة</th>
+                                                        <th>الوقت المستغرق (ساعة)</th>
+                                                        <th>الهالك (جرام)</th>
+                                                        <th>الإجراءات</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <!-- Workers will be added dynamically -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label for="notes" class="form-label">ملاحظات</label>
+                                        <textarea class="form-control" id="notes" rows="3"></textarea>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">حفظ البيانات</button>
+                                <button type="reset" class="btn btn-secondary">إعادة تعيين</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Records Section -->
+                <div class="section" id="records">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">سجلات الإنتاج</h1>
+                        <div class="btn-toolbar mb-2 mb-md-0">
+                            <div class="btn-group me-2">
+                                <input type="date" id="recordsFilterDate" class="form-control">
+                            </div>
+                            <button class="btn btn-sm btn-outline-secondary" id="filterRecords">
+                                <i class="fas fa-filter"></i> تصفية
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">جميع سجلات الإنتاج</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover" id="allRecordsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>التاريخ</th>
+                                            <th>الوقت</th>
+                                            <th>طول الرغيف</th>
+                                            <th>الوزن</th>
+                                            <th>درجة الحرارة</th>
+                                            <th>كمية الزبدة</th>
+                                            <th>نسبة المطابقة</th>
+                                            <th>معدل الإنتاج</th>
+                                            <th>الإجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Data will be populated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Section -->
+                <div class="section" id="analytics">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">تحليلات الأداء والإنتاجية</h1>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">إنتاجية العمال</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped" id="workerProductivityTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>اسم العامل</th>
+                                                    <th>عدد الأرغفة</th>
+                                                    <th>الإنتاجية/ساعة</th>
+                                                    <th>الهالك</th>
+                                                    <th>الجودة</th>
+                                                    <th>الكفاءة</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Data will be populated by JavaScript -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">تحليل الانحرافات</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="deviationAnalysis">
+                                        <p>سيتم عرض تحليل الانحرافات هنا بعد إدخال البيانات</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">إحصائيات الزبدة المستخدمة</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="stat-card">
+                                        <i class="fas fa-weight"></i>
+                                        <h4 id="totalButterUsed">0 جم</h4>
+                                        <p class="text-muted">إجمالي الزبدة المستخدمة</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="stat-card">
+                                        <i class="fas fa-balance-scale"></i>
+                                        <h4 id="avgButterPerPiece">0 جم</h4>
+                                        <p class="text-muted">متوسط الزبدة للقطعة</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="stat-card">
+                                        <i class="fas fa-chart-line"></i>
+                                        <h4 id="butterDeviation">0%</h4>
+                                        <p class="text-muted">انحراف استخدام الزبدة</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Workers Management Section -->
+                <div class="section" id="workers">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">إدارة العمال</h1>
+                        <button class="btn btn-sm btn-primary" id="addNewWorkerBtn">
+                            <i class="fas fa-plus"></i> إضافة عامل جديد
+                        </button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">جميع العمال</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped" id="workersManagementTable">
+                                    <thead>
+                                        <tr>
+                                            <th>اسم العامل</th>
+                                            <th>الإنتاج الكلي</th>
+                                            <th>إجمالي الساعات</th>
+                                            <th>متوسط الإنتاجية</th>
+                                            <th>إجمالي الهالك</th>
+                                            <th>جودة التصنيع</th>
+                                            <th>الكفاءة</th>
+                                            <th>الإجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Data will be populated by JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Worker Modal -->
+                <div class="modal fade" id="addWorkerModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">إضافة عامل جديد</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="addWorkerForm">
+                                    <div class="mb-3">
+                                        <label for="workerName" class="form-label">اسم العامل</label>
+                                        <input type="text" class="form-control" id="workerName" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="workerPosition" class="form-label">الوظيفة</label>
+                                        <input type="text" class="form-control" id="workerPosition">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="workerSalary" class="form-label">الأجر بالساعة</label>
+                                        <input type="number" class="form-control" id="workerSalary">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                                <button type="button" class="btn btn-primary" id="saveWorkerBtn">حفظ</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Specifications Section -->
+                <div class="section" id="specifications">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">مواصفات الجودة</h1>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">معايير الجودة المطلوبة</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered specification-table">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>المعيار</th>
+                                            <th>المواصفة</th>
+                                            <th>الحد الأدنى</th>
+                                            <th>الحد الأقصى</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>طول الرغيف</td>
+                                            <td>55 سم</td>
+                                            <td>53 سم</td>
+                                            <td>57 سم</td>
+                                        </tr>
+                                        <tr>
+                                            <td>وزن الرغيف</td>
+                                            <td>230 جم كحد أدنى</td>
+                                            <td>230 جم</td>
+                                            <td>لا يوجد</td>
+                                        </tr>
+                                        <tr>
+                                            <td>درجة حرارة التجميد</td>
+                                            <td>-15°م</td>
+                                            <td>-18°م</td>
+                                            <td>-12°م</td>
+                                        </tr>
+                                        <tr>
+                                            <td>طول القطعة</td>
+                                            <td>10 سم</td>
+                                            <td>9 سم</td>
+                                            <td>11 سم</td>
+                                        </tr>
+                                        <tr>
+                                            <td>عرض القطعة</td>
+                                            <td>6 سم</td>
+                                            <td>5.5 سم</td>
+                                            <td>6.5 سم</td>
+                                        </tr>
+                                        <tr>
+                                            <td>وزن القطعة</td>
+                                            <td>27.5 جم</td>
+                                            <td>25 جم</td>
+                                            <td>30 جم</td>
+                                        </tr>
+                                        <tr>
+                                            <td>كمية الزبدة للقطعة</td>
+                                            <td>5.5 جم</td>
+                                            <td>5 جم</td>
+                                            <td>6 جم</td>
+                                        </tr>
+                                        <tr>
+                                            <td>عدد القطع لكل رغيف</td>
+                                            <td>12.5 قطعة</td>
+                                            <td>12 قطعة</td>
+                                            <td>13 قطعة</td>
+                                        </tr>
+                                        <tr>
+                                            <td>زمن تعبئة الصينية</td>
+                                            <td>1 دقيقة</td>
+                                            <td>0.8 دقيقة</td>
+                                            <td>1.2 دقيقة</td>
+                                        </tr>
+                                        <tr>
+                                            <td>زمن التجميد</td>
+                                            <td>15 دقيقة</td>
+                                            <td>14 دقيقة</td>
+                                            <td>16 دقيقة</td>
+                                        </tr>
+                                        <tr>
+                                            <td>القطع في الصف الواحد</td>
+                                            <td>6.5 قطعة</td>
+                                            <td>6 قطع</td>
+                                            <td>7 قطع</td>
+                                        </tr>
+                                        <tr>
+                                            <td>عدد الصفوف في الصينية</td>
+                                            <td>5 صفوف</td>
+                                            <td>5 صفوف</td>
+                                            <td>5 صفوف</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تعديل بيانات الإنتاج</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm">
+                        <input type="hidden" id="editId">
+                        <!-- Form fields same as production form -->
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="editLoafLength" class="form-label">طول الرغيف (سم)</label>
+                                <input type="number" step="0.1" class="form-control" id="editLoafLength" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="editLoafWeight" class="form-label">وزن الرغيف (جرام)</label>
+                                <input type="number" step="1" class="form-control" id="editLoafWeight" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="editFreezerTemp" class="form-label">درجة حرارة التجميد (°م)</label>
+                                <input type="number" step="0.1" class="form-control" id="editFreezerTemp" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="editPieceLength" class="form-label">طول القطعة (سم)</label>
+                                <input type="number" step="0.1" class="form-control" id="editPieceLength" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="editPieceWidth" class="form-label">عرض القطعة (سم)</label>
+                                <input type="number" step="0.1" class="form-control" id="editPieceWidth" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="editPieceWeight" class="form-label">وزن القطعة (جرام)</label>
+                                <input type="number" step="0.1" class="form-control" id="editPieceWeight" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="editPiecesPerLoaf" class="form-label">عدد القطع لكل رغيف</label>
+                                <input type="number" step="1" class="form-control" id="editPiecesPerLoaf" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="editTrayFillTime" class="form-label">زمن تعبئة الصينية (دقيقة)</label>
+                                <input type="number" step="0.1" class="form-control" id="editTrayFillTime" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="editFreezingTime" class="form-label">زمن التجميد (دقيقة)</label>
+                                <input type="number" step="1" class="form-control" id="editFreezingTime" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="editPiecesPerRow" class="form-label">عدد القطع في الصف الواحد</label>
+                                <input type="number" step="1" class="form-control" id="editPiecesPerRow" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="editRowsPerTray" class="form-label">عدد الصفوف في الصينية</label>
+                                <input type="number" step="1" class="form-control" id="editRowsPerTray" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="editButterPerPiece" class="form-label">كمية الزبدة للقطعة (جرام)</label>
+                                <input type="number" step="0.1" class="form-control" id="editButterPerPiece" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="editWorkHours" class="form-label">عدد ساعات العمل</label>
+                                <input type="number" step="0.5" class="form-control" id="editWorkHours" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editTotalQuantity" class="form-label">الكمية الكلية المنتجة</label>
+                                <input type="number" step="1" class="form-control" id="editTotalQuantity" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="editWasteWeight" class="form-label">وزن الهالك (جرام)</label>
+                                <input type="number" step="1" class="form-control" id="editWasteWeight" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="editNotes" class="form-label">ملاحظات</label>
+                                <textarea class="form-control" id="editNotes" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" id="saveEditBtn">حفظ التغييرات</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initApp();
+            
+            // Navigation event listeners
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetSection = this.getAttribute('data-section');
+                    showSection(targetSection);
+                });
+            });
+            
+            // Form submission
+            document.getElementById('productionForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveProductionData();
+            });
+            
+            // Button event listeners
+            document.getElementById('newEntryBtn').addEventListener('click', function() {
+                showSection('dataEntry');
+            });
+            
+            document.getElementById('reportsBtn').addEventListener('click', function() {
+                showSection('records');
+            });
+            
+            document.getElementById('printBtn').addEventListener('click', function() {
+                generatePDF();
+            });
+            
+            document.getElementById('filterRecords').addEventListener('click', function() {
+                filterRecords();
+            });
+            
+            document.getElementById('saveEditBtn').addEventListener('click', function() {
+                saveEditedData();
+            });
+            
+            // Add worker button
+            document.getElementById('addWorkerBtn').addEventListener('click', function() {
+                addWorkerRow();
+            });
+            
+            // Add new worker button
+            document.getElementById('addNewWorkerBtn').addEventListener('click', function() {
+                const addWorkerModal = new bootstrap.Modal(document.getElementById('addWorkerModal'));
+                addWorkerModal.show();
+            });
+            
+            // Save worker button
+            document.getElementById('saveWorkerBtn').addEventListener('click', function() {
+                saveNewWorker();
+            });
+            
+            // Date filter buttons
+            document.getElementById('todayBtn').addEventListener('click', function() {
+                filterRecordsByDate('today');
+            });
+            
+            document.getElementById('weekBtn').addEventListener('click', function() {
+                filterRecordsByDate('week');
+            });
+            
+            document.getElementById('monthBtn').addEventListener('click', function() {
+                filterRecordsByDate('month');
+            });
+        });
+
+        function initApp() {
+            // Initialize sample data if none exists
+            if (!localStorage.getItem('productionData')) {
+                const sampleData = [
+                    {
+                        id: 1,
+                        date: '٢٤/٥/٢٠٢٣',
+                        time: '١٠:٣٠:٢٢',
+                        loafLength: 55,
+                        loafWeight: 235,
+                        freezerTemp: -15,
+                        pieceLength: 10,
+                        pieceWidth: 6,
+                        pieceWeight: 27,
+                        piecesPerLoaf: 12,
+                        trayFillTime: 1,
+                        freezingTime: 15,
+                        piecesPerRow: 6,
+                        rowsPerTray: 5,
+                        butterPerPiece: 5.5,
+                        workHours: 8,
+                        totalQuantity: 200,
+                        wasteWeight: 150,
+                        workers: [
+                            { name: 'أحمد محمد', loaves: 100, hours: 4, waste: 70 },
+                            { name: 'محمد علي', loaves: 100, hours: 4, waste: 80 }
+                        ],
+                        notes: 'إنتاج يوم عادي',
+                        complianceRate: 95.8,
+                        productionRate: 25
+                    },
+                    {
+                        id: 2,
+                        date: '٢٣/٥/٢٠٢٣',
+                        time: '١١:٤٥:١٨',
+                        loafLength: 54.5,
+                        loafWeight: 240,
+                        freezerTemp: -14,
+                        pieceLength: 10.2,
+                        pieceWidth: 5.8,
+                        pieceWeight: 28,
+                        piecesPerLoaf: 13,
+                        trayFillTime: 1.1,
+                        freezingTime: 14.5,
+                        piecesPerRow: 7,
+                        rowsPerTray: 5,
+                        butterPerPiece: 5.2,
+                        workHours: 7.5,
+                        totalQuantity: 180,
+                        wasteWeight: 120,
+                        workers: [
+                            { name: 'أحمد محمد', loaves: 90, hours: 3.5, waste: 60 },
+                            { name: 'سعيد عبدالله', loaves: 90, hours: 4, waste: 60 }
+                        ],
+                        notes: 'أداء جيد',
+                        complianceRate: 92.3,
+                        productionRate: 24
+                    }
+                ];
+                localStorage.setItem('productionData', JSON.stringify(sampleData));
+            }
+            
+            // Initialize workers data if none exists
+            if (!localStorage.getItem('workersData')) {
+                const sampleWorkers = [
+                    { id: 1, name: 'أحمد محمد', position: 'مشرف خط إنتاج', salary: 25, totalLoaves: 190, totalHours: 7.5, totalWaste: 130 },
+                    { id: 2, name: 'محمد علي', position: 'عامل تقطيع', salary: 20, totalLoaves: 100, totalHours: 4, totalWaste: 80 },
+                    { id: 3, name: 'سعيد عبدالله', position: 'عامل تعبئة', salary: 18, totalLoaves: 90, totalHours: 4, totalWaste: 60 }
+                ];
+                localStorage.setItem('workersData', JSON.stringify(sampleWorkers));
+            }
+            
+            // Load data from localStorage
+            loadRecentRecords();
+            loadAllRecords();
+            updateDashboard();
+            updateAnalytics();
+            loadWorkersManagement();
+        }
+
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show the requested section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update active nav link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-section') === sectionId) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // If analytics section, update it
+            if (sectionId === 'analytics') {
+                updateAnalytics();
+            } else if (sectionId === 'workers') {
+                loadWorkersManagement();
+            }
+        }
+
+        function addWorkerRow() {
+            const workersTable = document.getElementById('workersTable').querySelector('tbody');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>
+                    <select class="form-select form-select-sm" name="workerName" required>
+                        <option value="">اختر عامل</option>
+                        ${getWorkersOptions()}
+                    </select>
+                </td>
+                <td>
+                    <input type="number" class="form-control form-control-sm" name="workerLoaves" min="0" required>
+                </td>
+                <td>
+                    <input type="number" class="form-control form-control-sm" name="workerHours" step="0.1" min="0.1" required>
+                </td>
+                <td>
+                    <input type="number" class="form-control form-control-sm" name="workerWaste" min="0" required>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-danger remove-worker">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            `;
+            workersTable.appendChild(newRow);
+            
+            // Add event listener to remove button
+            newRow.querySelector('.remove-worker').addEventListener('click', function() {
+                this.closest('tr').remove();
+            });
+        }
+
+        function getWorkersOptions() {
+            const workers = JSON.parse(localStorage.getItem('workersData')) || [];
+            return workers.map(worker => `<option value="${worker.name}">${worker.name}</option>`).join('');
+        }
+
+        function saveProductionData() {
+            // Collect worker data
+            const workers = [];
+            const workerRows = document.querySelectorAll('#workersTable tbody tr');
+            workerRows.forEach(row => {
+                const workerName = row.querySelector('[name="workerName"]').value;
+                if (workerName) {
+                    workers.push({
+                        name: workerName,
+                        loaves: parseInt(row.querySelector('[name="workerLoaves"]').value),
+                        hours: parseFloat(row.querySelector('[name="workerHours"]').value),
+                        waste: parseFloat(row.querySelector('[name="workerWaste"]').value)
+                    });
+                }
+            });
+            
+            // Get form values
+            const productionData = {
+                id: Date.now(), // Unique ID based on timestamp
+                date: new Date().toLocaleDateString('ar-EG'),
+                time: new Date().toLocaleTimeString('ar-EG'),
+                loafLength: parseFloat(document.getElementById('loafLength').value),
+                loafWeight: parseFloat(document.getElementById('loafWeight').value),
+                freezerTemp: parseFloat(document.getElementById('freezerTemp').value),
+                pieceLength: parseFloat(document.getElementById('pieceLength').value),
+                pieceWidth: parseFloat(document.getElementById('pieceWidth').value),
+                pieceWeight: parseFloat(document.getElementById('pieceWeight').value),
+                piecesPerLoaf: parseInt(document.getElementById('piecesPerLoaf').value),
+                trayFillTime: parseFloat(document.getElementById('trayFillTime').value),
+                freezingTime: parseInt(document.getElementById('freezingTime').value),
+                piecesPerRow: parseInt(document.getElementById('piecesPerRow').value),
+                rowsPerTray: parseInt(document.getElementById('rowsPerTray').value),
+                butterPerPiece: parseFloat(document.getElementById('butterPerPiece').value),
+                workHours: parseFloat(document.getElementById('workHours').value),
+                totalQuantity: parseInt(document.getElementById('totalQuantity').value),
+                wasteWeight: parseFloat(document.getElementById('wasteWeight').value),
+                workers: workers,
+                notes: document.getElementById('notes').value,
+                complianceRate: calculateComplianceRate({
+                    loafLength: parseFloat(document.getElementById('loafLength').value),
+                    loafWeight: parseFloat(document.getElementById('loafWeight').value),
+                    freezerTemp: parseFloat(document.getElementById('freezerTemp').value),
+                    pieceLength: parseFloat(document.getElementById('pieceLength').value),
+                    pieceWidth: parseFloat(document.getElementById('pieceWidth').value),
+                    pieceWeight: parseFloat(document.getElementById('pieceWeight').value),
+                    piecesPerLoaf: parseInt(document.getElementById('piecesPerLoaf').value),
+                    trayFillTime: parseFloat(document.getElementById('trayFillTime').value),
+                    freezingTime: parseInt(document.getElementById('freezingTime').value),
+                    piecesPerRow: parseInt(document.getElementById('piecesPerRow').value),
+                    rowsPerTray: parseInt(document.getElementById('rowsPerTray').value),
+                    butterPerPiece: parseFloat(document.getElementById('butterPerPiece').value)
+                })
+            };
+            
+            // Calculate production rate
+            productionData.productionRate = productionData.workHours > 0 ? 
+                productionData.totalQuantity / productionData.workHours : 0;
+            
+            // Get existing data from localStorage
+            let existingData = JSON.parse(localStorage.getItem('productionData')) || [];
+            
+            // Add new data
+            existingData.push(productionData);
+            
+            // Save back to localStorage
+            localStorage.setItem('productionData', JSON.stringify(existingData));
+            
+            // Update workers data
+            updateWorkersData(workers);
+            
+            // Reset form and workers table
+            document.getElementById('productionForm').reset();
+            document.getElementById('workersTable').querySelector('tbody').innerHTML = '';
+            
+            // Update UI
+            loadRecentRecords();
+            loadAllRecords();
+            updateDashboard();
+            
+            // Show success message
+            showAlert('تم حفظ بيانات الإنتاج بنجاح!', 'success');
+            
+            // Return to dashboard
+            showSection('dashboard');
+        }
+
+        function updateWorkersData(workers) {
+            const workersData = JSON.parse(localStorage.getItem('workersData')) || [];
+            
+            workers.forEach(worker => {
+                const existingWorker = workersData.find(w => w.name === worker.name);
+                if (existingWorker) {
+                    existingWorker.totalLoaves = (existingWorker.totalLoaves || 0) + worker.loaves;
+                    existingWorker.totalHours = (existingWorker.totalHours || 0) + worker.hours;
+                    existingWorker.totalWaste = (existingWorker.totalWaste || 0) + worker.waste;
+                } else {
+                    workersData.push({
+                        id: Date.now(),
+                        name: worker.name,
+                        position: 'عامل',
+                        salary: 0,
+                        totalLoaves: worker.loaves,
+                        totalHours: worker.hours,
+                        totalWaste: worker.waste
+                    });
+                }
+            });
+            
+            localStorage.setItem('workersData', JSON.stringify(workersData));
+        }
+
+        function saveNewWorker() {
+            const name = document.getElementById('workerName').value;
+            const position = document.getElementById('workerPosition').value;
+            const salary = document.getElementById('workerSalary').value;
+            
+            if (!name) {
+                showAlert('يرجى إدخال اسم العامل', 'danger');
+                return;
+            }
+            
+            const workersData = JSON.parse(localStorage.getItem('workersData')) || [];
+            
+            // Check if worker already exists
+            if (workersData.some(worker => worker.name === name)) {
+                showAlert('هذا العامل مسجل بالفعل', 'warning');
+                return;
+            }
+            
+            // Add new worker
+            workersData.push({
+                id: Date.now(),
+                name: name,
+                position: position || 'عامل',
+                salary: salary ? parseFloat(salary) : 0,
+                totalLoaves: 0,
+                totalHours: 0,
+                totalWaste: 0
+            });
+            
+            localStorage.setItem('workersData', JSON.stringify(workersData));
+            
+            // Close modal and reset form
+            const addWorkerModal = bootstrap.Modal.getInstance(document.getElementById('addWorkerModal'));
+            addWorkerModal.hide();
+            document.getElementById('addWorkerForm').reset();
+            
+            showAlert('تم إضافة العامل بنجاح', 'success');
+            loadWorkersManagement();
+        }
+
+        function loadWorkersManagement() {
+            const workersData = JSON.parse(localStorage.getItem('workersData')) || [];
+            const tableBody = document.getElementById('workersManagementTable').querySelector('tbody');
+            tableBody.innerHTML = '';
+            
+            workersData.forEach(worker => {
+                const productivity = worker.totalHours > 0 ? (worker.totalLoaves / worker.totalHours).toFixed(1) : 0;
+                const quality = worker.totalLoaves > 0 ? ((worker.totalLoaves - (worker.totalWaste / 230)) / worker.totalLoaves * 100).toFixed(1) : 0;
+                const efficiency = (productivity * (quality / 100)).toFixed(1);
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${worker.name} ${worker.position ? `<br><small class="text-muted">${worker.position}</small>` : ''}</td>
+                    <td>${worker.totalLoaves}</td>
+                    <td>${worker.totalHours.toFixed(1)}</td>
+                    <td>${productivity} رغيف/ساعة</td>
+                    <td>${worker.totalWaste.toFixed(1)} جم</td>
+                    <td>
+                        <span class="badge ${quality >= 90 ? 'bg-success' : quality >= 80 ? 'bg-warning' : 'bg-danger'} quality-badge">
+                            ${quality}%
+                        </span>
+                    </td>
+                    <td>
+                        <div class="productivity-bar">
+                            <div class="productivity-fill" style="width: ${efficiency > 100 ? 100 : efficiency}%"></div>
+                        </div>
+                        <small>${efficiency}%</small>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editWorker(${worker.id})"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteWorker(${worker.id})"><i class="fas fa-trash"></i></button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function calculateComplianceRate(data) {
+            let complianceScore = 0;
+            let totalMetrics = 0;
+            
+            // Check loaf length (53-57 cm)
+            if (data.loafLength >= 53 && data.loafLength <= 57) complianceScore++;
+            totalMetrics++;
+            
+            // Check loaf weight (≥230g)
+            if (data.loafWeight >= 230) complianceScore++;
+            totalMetrics++;
+            
+            // Check freezer temperature (-18 to -12°C)
+            if (data.freezerTemp >= -18 && data.freezerTemp <= -12) complianceScore++;
+            totalMetrics++;
+            
+            // Check piece length (9-11 cm)
+            if (data.pieceLength >= 9 && data.pieceLength <= 11) complianceScore++;
+            totalMetrics++;
+            
+            // Check piece width (5.5-6.5 cm)
+            if (data.pieceWidth >= 5.5 && data.pieceWidth <= 6.5) complianceScore++;
+            totalMetrics++;
+            
+            // Check piece weight (25-30 g)
+            if (data.pieceWeight >= 25 && data.pieceWeight <= 30) complianceScore++;
+            totalMetrics++;
+            
+            // Check pieces per loaf (12-13)
+            if (data.piecesPerLoaf >= 12 && data.piecesPerLoaf <= 13) complianceScore++;
+            totalMetrics++;
+            
+            // Check tray fill time (0.8-1.2 min)
+            if (data.trayFillTime >= 0.8 && data.trayFillTime <= 1.2) complianceScore++;
+            totalMetrics++;
+            
+            // Check freezing time (14-16 min)
+            if (data.freezingTime >= 14 && data.freezingTime <= 16) complianceScore++;
+            totalMetrics++;
+            
+            // Check pieces per row (6-7)
+            if (data.piecesPerRow >= 6 && data.piecesPerRow <= 7) complianceScore++;
+            totalMetrics++;
+            
+            // Check rows per tray (must be 5)
+            if (data.rowsPerTray === 5) complianceScore++;
+            totalMetrics++;
+            
+            // Check butter per piece (5-6 g)
+            if (data.butterPerPiece >= 5 && data.butterPerPiece <= 6) complianceScore++;
+            totalMetrics++;
+            
+            // Calculate percentage
+            return (complianceScore / totalMetrics) * 100;
+        }
+
+        function loadRecentRecords() {
+            const data = JSON.parse(localStorage.getItem('productionData')) || [];
+            const tableBody = document.getElementById('recentRecordsTable').querySelector('tbody');
+            tableBody.innerHTML = '';
+            
+            // Get only recent records (last 5)
+            const recentData = data.slice(-5);
+            
+            recentData.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.date}</td>
+                    <td>${item.time}</td>
+                    <td>${item.loafLength} سم</td>
+                    <td>${item.loafWeight} جم</td>
+                    <td>${item.freezerTemp}°م</td>
+                    <td>${item.complianceRate.toFixed(1)}%</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editRecord(${item.id})"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteRecord(${item.id})"><i class="fas fa-trash"></i></button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function loadAllRecords() {
+            const data = JSON.parse(localStorage.getItem('productionData')) || [];
+            const tableBody = document.getElementById('allRecordsTable').querySelector('tbody');
+            tableBody.innerHTML = '';
+            
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.date}</td>
+                    <td>${item.time}</td>
+                    <td>${item.loafLength} سم</td>
+                    <td>${item.loafWeight} جم</td>
+                    <td>${item.freezerTemp}°م</td>
+                    <td>${item.butterPerPiece} جم</td>
+                    <td>${item.complianceRate.toFixed(1)}%</td>
+                    <td>${item.productionRate ? item.productionRate.toFixed(1) : 0}/ساعة</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editRecord(${item.id})"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteRecord(${item.id})"><i class="fas fa-trash"></i></button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function updateDashboard() {
+            const data = JSON.parse(localStorage.getItem('productionData')) || [];
+            
+            // Calculate stats
+            const totalLoaves = data.reduce((sum, item) => sum + item.totalQuantity, 0);
+            const avgComplianceRate = data.length > 0 ? data.reduce((sum, item) => sum + item.complianceRate, 0) / data.length : 0;
+            
+            // Calculate average temperature
+            const totalTemp = data.reduce((sum, item) => sum + item.freezerTemp, 0);
+            const avgTemp = data.length > 0 ? (totalTemp / data.length).toFixed(1) : 0;
+            
+            // Calculate production rate
+            const totalWorkHours = data.reduce((sum, item) => sum + item.workHours, 0);
+            const avgProductionRate = totalWorkHours > 0 ? totalLoaves / totalWorkHours : 0;
+            
+            // Update dashboard elements
+            document.getElementById('totalLoaves').textContent = totalLoaves;
+            document.getElementById('complianceRate').textContent = `${avgComplianceRate.toFixed(1)}%`;
+            document.getElementById('productionRate').textContent = `${avgProductionRate.toFixed(1)}/ساعة`;
+            document.getElementById('avgTemp').textContent = `${avgTemp}°م`;
+            
+            // Update compliance progress bars
+            updateComplianceProgressBars(data);
+            
+            // Update top performers
+            updateTopPerformers();
+        }
+        
+        function updateTopPerformers() {
+            const workersData = JSON.parse(localStorage.getItem('workersData')) || [];
+            const topPerformersContainer = document.getElementById('topPerformers');
+            topPerformersContainer.innerHTML = '';
+            
+            // Sort workers by efficiency (productivity * quality)
+            const sortedWorkers = [...workersData].sort((a, b) => {
+                const aProductivity = a.totalHours > 0 ? (a.totalLoaves / a.totalHours) : 0;
+                const bProductivity = b.totalHours > 0 ? (b.totalLoaves / b.totalHours) : 0;
+                
+                const aQuality = a.totalLoaves > 0 ? ((a.totalLoaves - (a.totalWaste / 230)) / a.totalLoaves * 100) : 0;
+                const bQuality = b.totalLoaves > 0 ? ((b.totalLoaves - (b.totalWaste / 230)) / b.totalLoaves * 100) : 0;
+                
+                const aEfficiency = aProductivity * (aQuality / 100);
+                const bEfficiency = bProductivity * (bQuality / 100);
+                
+                return bEfficiency - aEfficiency;
+            });
+            
+            // Display top 3 performers
+            const topWorkers = sortedWorkers.slice(0, 3);
+            
+            topWorkers.forEach(worker => {
+                const productivity = worker.totalHours > 0 ? (worker.totalLoaves / worker.totalHours).toFixed(1) : 0;
+                const quality = worker.totalLoaves > 0 ? ((worker.totalLoaves - (worker.totalWaste / 230)) / worker.totalLoaves * 100).toFixed(1) : 0;
+                const efficiency = (productivity * (quality / 100)).toFixed(1);
+                
+                const performerDiv = document.createElement('div');
+                performerDiv.className = 'col-md-4';
+                performerDiv.innerHTML = `
+                    <div class="card worker-performance top-performer">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">${worker.name}</h5>
+                            <p class="card-text text-muted">${worker.position || 'عامل'}</p>
+                            <div class="mb-2">
+                                <span class="fw-bold">${productivity}</span> رغيف/ساعة
+                            </div>
+                            <div class="mb-2">
+                                <span class="fw-bold">${quality}%</span> جودة التصنيع
+                            </div>
+                            <div class="mb-2">
+                                <span class="fw-bold">${efficiency}%</span> كفاءة إنتاجية
+                            </div>
+                            <div class="productivity-bar mx-auto" style="max-width: 200px;">
+                                <div class="productivity-fill" style="width: ${efficiency > 100 ? 100 : efficiency}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                topPerformersContainer.appendChild(performerDiv);
+            });
+        }
+        
+        function updateComplianceProgressBars(data) {
+            if (data.length === 0) return;
+            
+            // Calculate average compliance for each metric
+            let lengthSum = 0, weightSum = 0, tempSum = 0, pieceSum = 0;
+            
+            data.forEach(item => {
+                // Length compliance (53-57 cm)
+                lengthSum += (item.loafLength >= 53 && item.loafLength <= 57) ? 100 : 0;
+                
+                // Weight compliance (≥230g)
+                weightSum += (item.loafWeight >= 230) ? 100 : 0;
+                
+                // Temperature compliance (-18 to -12°C)
+                tempSum += (item.freezerTemp >= -18 && item.freezerTemp <= -12) ? 100 : 0;
+                
+                // Piece compliance (multiple dimensions)
+                let pieceCompliance = 0;
+                if (item.pieceLength >= 9 && item.pieceLength <= 11) pieceCompliance += 25;
+                if (item.pieceWidth >= 5.5 && item.pieceWidth <= 6.5) pieceCompliance += 25;
+                if (item.pieceWeight >= 25 && item.pieceWeight <= 30) pieceCompliance += 25;
+                if (item.butterPerPiece >= 5 && item.butterPerPiece <= 6) pieceCompliance += 25;
+                pieceSum += pieceCompliance;
+            });
+            
+            // Update progress bars
+            const lengthAvg = lengthSum / data.length;
+            const weightAvg = weightSum / data.length;
+            const tempAvg = tempSum / data.length;
+            const pieceAvg = pieceSum / data.length;
+            
+            document.getElementById('lengthCompliance').style.width = `${lengthAvg}%`;
+            document.getElementById('lengthCompliance').textContent = `${lengthAvg.toFixed(1)}%`;
+            document.getElementById('lengthCompliance').setAttribute('aria-valuenow', lengthAvg);
+            
+            document.getElementById('weightCompliance').style.width = `${weightAvg}%`;
+            document.getElementById('weightCompliance').textContent = `${weightAvg.toFixed(1)}%`;
+            document.getElementById('weightCompliance').setAttribute('aria-valuenow', weightAvg);
+            
+            document.getElementById('tempCompliance').style.width = `${tempAvg}%`;
+            document.getElementById('tempCompliance').textContent = `${tempAvg.toFixed(1)}%`;
+            document.getElementById('tempCompliance').setAttribute('aria-valuenow', tempAvg);
+            
+            document.getElementById('pieceCompliance').style.width = `${pieceAvg}%`;
+            document.getElementById('pieceCompliance').textContent = `${pieceAvg.toFixed(1)}%`;
+            document.getElementById('pieceCompliance').setAttribute('aria-valuenow', pieceAvg);
+        }
+
+        function updateAnalytics() {
+            const data = JSON.parse(localStorage.getItem('productionData')) || [];
+            if (data.length === 0) return;
+            
+            // Calculate worker productivity
+            const workersData = JSON.parse(localStorage.getItem('workersData')) || [];
+            const tableBody = document.getElementById('workerProductivityTable').querySelector('tbody');
+            tableBody.innerHTML = '';
+            
+            workersData.forEach(worker => {
+                const productivity = worker.totalHours > 0 ? (worker.totalLoaves / worker.totalHours).toFixed(1) : 0;
+                const quality = worker.totalLoaves > 0 ? ((worker.totalLoaves - (worker.totalWaste / 230)) / worker.totalLoaves * 100).toFixed(1) : 0;
+                const efficiency = (productivity * (quality / 100)).toFixed(1);
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${worker.name}</td>
+                    <td>${worker.totalLoaves}</td>
+                    <td>${productivity}</td>
+                    <td>${worker.totalWaste.toFixed(1)} جم</td>
+                    <td>
+                        <span class="badge ${quality >= 90 ? 'bg-success' : quality >= 80 ? 'bg-warning' : 'bg-danger'} quality-badge">
+                            ${quality}%
+                        </span>
+                    </td>
+                    <td>
+                        <div class="productivity-bar">
+                            <div class="productivity-fill" style="width: ${efficiency > 100 ? 100 : efficiency}%"></div>
+                        </div>
+                        <small>${efficiency}%</small>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+            
+            // Calculate butter statistics
+            const totalButter = data.reduce((sum, item) => {
+                const pieces = item.totalQuantity * item.piecesPerLoaf;
+                return sum + (pieces * item.butterPerPiece);
+            }, 0);
+            
+            const totalPieces = data.reduce((sum, item) => sum + (item.totalQuantity * item.piecesPerLoaf), 0);
+            const avgButterPerPiece = totalPieces > 0 ? totalButter / totalPieces : 0;
+            
+            // Calculate butter deviation (from ideal 5.5g)
+            const butterDeviation = ((avgButterPerPiece - 5.5) / 5.5) * 100;
+            
+            // Update butter stats
+            document.getElementById('totalButterUsed').textContent = `${totalButter.toFixed(1)} جم`;
+            document.getElementById('avgButterPerPiece').textContent = `${avgButterPerPiece.toFixed(1)} جم`;
+            document.getElementById('butterDeviation').textContent = `${butterDeviation.toFixed(1)}%`;
+            
+            // Update deviation analysis
+            const deviationAnalysis = document.getElementById('deviationAnalysis');
+            deviationAnalysis.innerHTML = `
+                <div class="mb-2">
+                    <strong>انحراف طول الرغيف:</strong> 
+                    ${calculateDeviationAnalysis(data, 'loafLength', 55, 2)}
+                </div>
+                <div class="mb-2">
+                    <strong>انحراف وزن الرغيف:</strong> 
+                    ${calculateDeviationAnalysis(data, 'loafWeight', 250, 20)}
+                </div>
+                <div class="mb-2">
+                    <strong>انحراف درجة الحرارة:</strong> 
+                    ${calculateDeviationAnalysis(data, 'freezerTemp', -15, 3)}
+                </div>
+                <div class="mb-2">
+                    <strong>انحراف كمية الزبدة:</strong> 
+                    ${calculateDeviationAnalysis(data, 'butterPerPiece', 5.5, 0.5)}
+                </div>
+            `;
+        }
+        
+        function calculateDeviationAnalysis(data, field, target, tolerance) {
+            if (data.length === 0) return 'لا توجد بيانات كافية';
+            
+            const values = data.map(item => item[field]);
+            const avg = values.reduce((sum, val) => sum + val, 0) / values.length;
+            const deviation = ((avg - target) / target) * 100;
+            const absDeviation = Math.abs(deviation);
+            
+            let status = 'جيد';
+            let statusClass = 'text-success';
+            
+            if (absDeviation > 5) {
+                status = 'يحتاج تحسين';
+                statusClass = 'text-warning';
+            }
+            if (absDeviation > 10) {
+                status = 'غير مقبول';
+                statusClass = 'text-danger';
+            }
+            
+            return `
+                المتوسط: ${avg.toFixed(2)} | 
+                الانحراف: ${deviation.toFixed(1)}% | 
+                <span class="${statusClass}">${status}</span>
+            `;
+        }
+
+        function editRecord(id) {
+            const data = JSON.parse(localStorage.getItem('productionData')) || [];
+            const record = data.find(item => item.id === id);
+            
+            if (record) {
+                // Populate edit form
+                document.getElementById('editId').value = record.id;
+                document.getElementById('editLoafLength').value = record.loafLength;
+                document.getElementById('editLoafWeight').value = record.loafWeight;
+                document.getElementById('editFreezerTemp').value = record.freezerTemp;
+                document.getElementById('editPieceLength').value = record.pieceLength;
+                document.getElementById('editPieceWidth').value = record.pieceWidth;
+                document.getElementById('editPieceWeight').value = record.pieceWeight;
+                document.getElementById('editPiecesPerLoaf').value = record.piecesPerLoaf;
+                document.getElementById('editTrayFillTime').value = record.trayFillTime;
+                document.getElementById('editFreezingTime').value = record.freezingTime;
+                document.getElementById('editPiecesPerRow').value = record.piecesPerRow;
+                document.getElementById('editRowsPerTray').value = record.rowsPerTray;
+                document.getElementById('editButterPerPiece').value = record.butterPerPiece;
+                document.getElementById('editWorkHours').value = record.workHours;
+                document.getElementById('editTotalQuantity').value = record.totalQuantity;
+                document.getElementById('editWasteWeight').value = record.wasteWeight;
+                document.getElementById('editNotes').value = record.notes || '';
+                
+                // Show modal
+                const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+                editModal.show();
+            }
+        }
+
+        function saveEditedData() {
+            const id = parseInt(document.getElementById('editId').value);
+            const data = JSON.parse(localStorage.getItem('productionData')) || [];
+            const index = data.findIndex(item => item.id === id);
+            
+            if (index !== -1) {
+                // Update record
+                data[index].loafLength = parseFloat(document.getElementById('editLoafLength').value);
+                data[index].loafWeight = parseFloat(document.getElementById('editLoafWeight').value);
+                data[index].freezerTemp = parseFloat(document.getElementById('editFreezerTemp').value);
+                data[index].pieceLength = parseFloat(document.getElementById('editPieceLength').value);
+                data[index].pieceWidth = parseFloat(document.getElementById('editPieceWidth').value);
+                data[index].pieceWeight = parseFloat(document.getElementById('editPieceWeight').value);
+                data[index].piecesPerLoaf = parseInt(document.getElementById('editPiecesPerLoaf').value);
+                data[index].trayFillTime = parseFloat(document.getElementById('editTrayFillTime').value);
+                data[index].freezingTime = parseInt(document.getElementById('editFreezingTime').value);
+                data[index].piecesPerRow = parseInt(document.getElementById('editPiecesPerRow').value);
+                data[index].rowsPerTray = parseInt(document.getElementById('editRowsPerTray').value);
+                data[index].butterPerPiece = parseFloat(document.getElementById('editButterPerPiece').value);
+                data[index].workHours = parseFloat(document.getElementById('editWorkHours').value);
+                data[index].totalQuantity = parseInt(document.getElementById('editTotalQuantity').value);
+                data[index].wasteWeight = parseFloat(document.getElementById('editWasteWeight').value);
+                data[index].notes = document.getElementById('editNotes').value;
+                
+                // Recalculate compliance rate and production rate
+                data[index].complianceRate = calculateComplianceRate({
+                    loafLength: data[index].loafLength,
+                    loafWeight: data[index].loafWeight,
+                    freezerTemp: data[index].freezerTemp,
+                    pieceLength: data[index].pieceLength,
+                    pieceWidth: data[index].pieceWidth,
+                    pieceWeight: data[index].pieceWeight,
+                    piecesPerLoaf: data[index].piecesPerLoaf,
+                    trayFillTime: data[index].trayFillTime,
+                    freezingTime: data[index].freezingTime,
+                    piecesPerRow: data[index].piecesPerRow,
+                    rowsPerTray: data[index].rowsPerTray,
+                    butterPerPiece: data[index].butterPerPiece
+                });
+                
+                data[index].productionRate = data[index].totalQuantity / data[index].workHours;
+                
+                // Save back to localStorage
+                localStorage.setItem('productionData', JSON.stringify(data));
+                
+                // Update UI
+                loadRecentRecords();
+                loadAllRecords();
+                updateDashboard();
+                
+                // Hide modal
+                const editModal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
+                editModal.hide();
+                
+                // Show success message
+                showAlert('تم تحديث البيانات بنجاح!', 'success');
+            }
+        }
+
+        function deleteRecord(id) {
+            if (confirm('هل أنت متأكد من أنك تريد حذف هذا السجل؟')) {
+                let data = JSON.parse(localStorage.getItem('productionData')) || [];
+                data = data.filter(item => item.id !== id);
+                localStorage.setItem('productionData', JSON.stringify(data));
+                
+                // Update UI
+                loadRecentRecords();
+                loadAllRecords();
+                updateDashboard();
+                
+                // Show success message
+                showAlert('تم حذف السجل بنجاح!', 'success');
+            }
+        }
+
+        function editWorker(id) {
+            // Implement worker editing functionality
+            showAlert('سيتم تطوير هذه الميزة في الإصدارات القادمة', 'info');
+        }
+
+        function deleteWorker(id) {
+            if (confirm('هل أنت متأكد من أنك تريد حذف هذا العامل؟ سيتم حذف جميع بياناته أيضًا.')) {
+                let workersData = JSON.parse(localStorage.getItem('workersData')) || [];
+                workersData = workersData.filter(worker => worker.id !== id);
+                localStorage.setItem('workersData', JSON.stringify(workersData));
+                
+                // Update UI
+                loadWorkersManagement();
+                updateDashboard();
+                
+                // Show success message
+                showAlert('تم حذف العامل بنجاح!', 'success');
+            }
+        }
+
+        function filterRecords() {
+            const filterDate = document.getElementById('recordsFilterDate').value;
+            const data = JSON.parse(localStorage.getItem('productionData')) || [];
+            const tableBody = document.getElementById('allRecordsTable').querySelector('tbody');
+            tableBody.innerHTML = '';
+            
+            let filteredData = data;
+            if (filterDate) {
+                // Convert filter date to match the stored date format (ar-EG)
+                const dateObj = new Date(filterDate);
+                const filterDateFormatted = dateObj.toLocaleDateString('ar-EG');
+                filteredData = data.filter(item => item.date === filterDateFormatted);
+            }
+            
+            filteredData.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.date}</td>
+                    <td>${item.time}</td>
+                    <td>${item.loafLength} سم</td>
+                    <td>${item.loafWeight} جم</td>
+                    <td>${item.freezerTemp}°م</td>
+                    <td>${item.butterPerPiece} جم</td>
+                    <td>${item.complianceRate.toFixed(1)}%</td>
+                    <td>${item.productionRate ? item.productionRate.toFixed(1) : 0}/ساعة</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editRecord(${item.id})"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteRecord(${item.id})"><i class="fas fa-trash"></i></button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function filterRecordsByDate(range) {
+            const data = JSON.parse(localStorage.getItem('productionData')) || [];
+            const tableBody = document.getElementById('allRecordsTable').querySelector('tbody');
+            tableBody.innerHTML = '';
+            
+            let filteredData = data;
+            const today = new Date();
+            
+            if (range === 'today') {
+                const todayFormatted = today.toLocaleDateString('ar-EG');
+                filteredData = data.filter(item => item.date === todayFormatted);
+            } else if (range === 'week') {
+                const oneWeekAgo = new Date();
+                oneWeekAgo.setDate(today.getDate() - 7);
+                filteredData = data.filter(item => {
+                    const itemDate = new Date(item.date);
+                    return itemDate >= oneWeekAgo;
+                });
+            } else if (range === 'month') {
+                const oneMonthAgo = new Date();
+                oneMonthAgo.setMonth(today.getMonth() - 1);
+                filteredData = data.filter(item => {
+                    const itemDate = new Date(item.date);
+                    return itemDate >= oneMonthAgo;
+                });
+            }
+            
+            filteredData.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.date}</td>
+                    <td>${item.time}</td>
+                    <td>${item.loafLength} سم</td>
+                    <td>${item.loafWeight} جم</td>
+                    <td>${item.freezerTemp}°م</td>
+                    <td>${item.butterPerPiece} جم</td>
+                    <td>${item.complianceRate.toFixed(1)}%</td>
+                    <td>${item.productionRate ? item.productionRate.toFixed(1) : 0}/ساعة</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editRecord(${item.id})"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteRecord(${item.id})"><i class="fas fa-trash"></i></button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function generatePDF() {
+            // Create a simple PDF report by opening a new window with the content
+            const data = JSON.parse(localStorage.getItem('productionData')) || [];
+            const workersData = JSON.parse(localStorage.getItem('workersData')) || [];
+            const printWindow = window.open('', '_blank');
+            
+            // Calculate summary data
+            const totalLoaves = data.reduce((sum, item) => sum + item.totalQuantity, 0);
+            const avgComplianceRate = data.length > 0 ? data.reduce((sum, item) => sum + item.complianceRate, 0) / data.length : 0;
+            
+            // Get top 3 workers by efficiency
+            const topWorkers = [...workersData].sort((a, b) => {
+                const aProductivity = a.totalHours > 0 ? (a.totalLoaves / a.totalHours) : 0;
+                const bProductivity = b.totalHours > 0 ? (b.totalLoaves / b.totalHours) : 0;
+                
+                const aQuality = a.totalLoaves > 0 ? ((a.totalLoaves - (a.totalWaste / 230)) / a.totalLoaves * 100) : 0;
+                const bQuality = b.totalLoaves > 0 ? ((b.totalLoaves - (b.totalWaste / 230)) / b.totalLoaves * 100) : 0;
+                
+                const aEfficiency = aProductivity * (aQuality / 100);
+                const bEfficiency = bProductivity * (bQuality / 100);
+                
+                return bEfficiency - aEfficiency;
+            }).slice(0, 3);
+            
+            printWindow.document.write(`
+                <html dir="rtl">
+                <head>
+                    <title>تقرير مراقبة الجودة والإنتاج</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; }
+                        h1, h2, h3 { color: #4a7c59; }
+                        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+                        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+                        th { background-color: #f2f2f2; }
+                        .header { text-align: center; margin-bottom: 30px; }
+                        .footer { margin-top: 30px; text-align: left; font-size: 0.8em; color: #777; }
+                        .worker-card { border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 5px; }
+                        .top-worker { background-color: #f8fff9; border-color: #28a745; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>تقرير مراقبة الجودة والإنتاج</h1>
+                        <h2>Smiley's Grill Industries</h2>
+                        <p>تاريخ التقرير: ${new Date().toLocaleDateString('ar-EG')}</p>
+                    </div>
+                    
+                    <h3>ملخص الأداء</h3>
+                    <table>
+                        <tr>
+                            <th>إجمالي الأرغفة المنتجة</th>
+                            <th>متوسط نسبة المطابقة</th>
+                            <th>معدل الإنتاج</th>
+                        </tr>
+                        <tr>
+                            <td>${totalLoaves}</td>
+                            <td>${avgComplianceRate.toFixed(1)}%</td>
+                            <td>${(totalLoaves / data.reduce((sum, item) => sum + item.workHours, 0)).toFixed(1)}/ساعة</td>
+                        </tr>
+                    </table>
+                    
+                    <h3>أفضل العمال أداءً</h3>
+            `);
+            
+            topWorkers.forEach(worker => {
+                const productivity = worker.totalHours > 0 ? (worker.totalLoaves / worker.totalHours).toFixed(1) : 0;
+                const quality = worker.totalLoaves > 0 ? ((worker.totalLoaves - (worker.totalWaste / 230)) / worker.totalLoaves * 100).toFixed(1) : 0;
+                const efficiency = (productivity * (quality / 100)).toFixed(1);
+                
+                printWindow.document.write(`
+                    <div class="worker-card top-worker">
+                        <h4>${worker.name}</h4>
+                        <p>الوظيفة: ${worker.position || 'عامل'}</p>
+                        <p>الإنتاجية: ${productivity} رغيف/ساعة</p>
+                        <p>جودة التصنيع: ${quality}%</p>
+                        <p>الكفاءة الإنتاجية: ${efficiency}%</p>
+                    </div>
+                `);
+            });
+            
+            printWindow.document.write(`
+                    <h3>أحدث سجلات الإنتاج</h3>
+                    <table>
+                        <tr>
+                            <th>التاريخ</th>
+                            <th>الوقت</th>
+                            <th>طول الرغيف</th>
+                            <th>الوزن</th>
+                            <th>درجة الحرارة</th>
+                            <th>نسبة المطابقة</th>
+                        </tr>
+            `);
+            
+            // Get only recent records (last 5)
+            const recentData = data.slice(-5);
+            
+            recentData.forEach(item => {
+                printWindow.document.write(`
+                    <tr>
+                        <td>${item.date}</td>
+                        <td>${item.time}</td>
+                        <td>${item.loafLength} سم</td>
+                        <td>${item.loafWeight} جم</td>
+                        <td>${item.freezerTemp}°م</td>
+                        <td>${item.complianceRate.toFixed(1)}%</td>
+                    </tr>
+                `);
+            });
+            
+            printWindow.document.write(`
+                    </table>
+                    <div class="footer">
+                        <p>تم إنشاء هذا التقرير في: ${new Date().toLocaleString('ar-EG')}</p>
+                    </div>
+                </body>
+                </html>
+            `);
+            
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+        }
+
+        function showAlert(message, type) {
+            const alertContainer = document.querySelector('.alert-container');
+            const alertId = Date.now();
+            
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+            alertDiv.setAttribute('role', 'alert');
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            
+            alertContainer.appendChild(alertDiv);
+            
+            // Auto dismiss after 5 seconds
+            setTimeout(() => {
+                if (document.getElementById(alertId)) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
